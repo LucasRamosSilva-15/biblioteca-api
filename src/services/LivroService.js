@@ -1,8 +1,8 @@
 const LivroRepository = require('../repositories/LivroRepository');
 
 class LivroService {
-    async BuscarTodos() {
-        return await LivroRepository.BuscarTodos();
+    async BuscarTodos(filtros) {
+        return await LivroRepository.BuscarTodos(filtros);
     }
 
     async BuscarPorId(id) {

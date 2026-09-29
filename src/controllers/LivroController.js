@@ -21,7 +21,8 @@ class LivroController {
     }
     async BuscarTodos(req, res) {
         try {
-            const livros = await LivroService.BuscarTodos();
+            const filtros = req.query;
+            const livros = await LivroService.BuscarTodos(filtros);
             return res.status(200).json(livros);
         } catch (error) {
             return res.status(500).json({ error: error.message });

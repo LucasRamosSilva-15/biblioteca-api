@@ -1,8 +1,26 @@
 const { Livro, Autor, Categoria } = require("../models");
+const { Op } = require("sequelize");
+
 
 class LivroRepository {
-    async BuscarTodos() {
+    async BuscarTodos(filtros = {}) {
+        const where = {};
+        if (filtros.titulo) {
+            where.titulo = {
+                [Op.iLike]: `%${filtros.titulo}%`
+            };
+        }
+
+        if (filtros.autorId) {
+            where.autorId = filtros.autorId;
+        }
+
+        if (filtros.disponivel !== undefined) {
+            where.disponivel = filtros.disponivel === 'true';
+        }
+
         return await Livro.findAll({
+            where: condicoesWhere,
             include: [Autor, Categoria]
         });
     }
