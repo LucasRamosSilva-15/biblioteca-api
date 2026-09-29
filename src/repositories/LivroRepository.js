@@ -23,7 +23,7 @@ class LivroRepository {
         const limit = parseInt(filtros.limit) || 10;
         const offset = (page - 1) * limit;
 
-        return await Livro.findAndCountAll({
+        const { count, rows } = await Livro.findAndCountAll({
             where: condicoesWhere,
             include: [Autor, Categoria],
             limit: limit,
