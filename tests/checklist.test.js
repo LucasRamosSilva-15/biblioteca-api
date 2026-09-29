@@ -16,7 +16,7 @@ afterAll(async () => {
     await sequelize.close();
 });
 
-describe('Checklist da Dupla - Parte 1', () => {
+describe('Testes - Parte 1', () => {
     test('1. Sequelize conecta corretamente e Banco SQLite criado', async () => {
         await expect(sequelize.authenticate()).resolves.not.toThrow();
     });
@@ -78,7 +78,7 @@ describe('Checklist da Dupla - Parte 1', () => {
     });
 });
 
-describe('Checklist da Dupla - Parte 2 (Livros, Categorias, Relacionamentos, Filtros)', () => {
+describe('Testes - Parte 2 (Livros, Categorias, Relacionamentos, Filtros)', () => {
     let autorId, livroId, categoriaId;
 
     test('7. CRUD de Livro e Relacionamento Autor -> Livro (POST)', async () => {
@@ -171,5 +171,60 @@ describe('Checklist da Dupla - Parte 2 (Livros, Categorias, Relacionamentos, Fil
     test('18. Listar autores funciona', async () => {
         const res = await request(app).get('/api/autores');
         expect(res.statusCode).toBe(200);
+    });
+});
+
+describe('Testes - Parte 3 (Empréstimos e Transações)', () => {
+    let autorId, livroId;
+
+    test('19. Preparando o caminho para Empréstimos', async () => {
+        const resAutor = await request(app).post('/api/autores').send({
+            nome: "George R. R. Martin",
+            email: "grrm@teste.com"
+        });
+        autorId = resAutor.body.id;
+
+        const resLivro = await request(app).post('/api/livros').send({
+            titulo: "A Guerra dos Tronos",
+            isbn: "987654321",
+            ano: 1996,
+            autorId: autorId
+        });
+        livroId = resLivro.body.id;
+        expect(resLivro.statusCode).toBe(201);
+    });
+
+    test('20. Emprestar um livro disponível funciona', async () => {
+        const res = await request(app).post(`/api/livros/${livroId}/emprestar`);
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.mensagem).toBe("Empréstimo realizado com sucesso!");
+
+        const resGet = await request(app).get(`/api/livros/${livroId}`);
+        expect(resGet.body.disponivel).toBe(false);
+    });
+
+    test('21. Tentar emprestar um livro já emprestado deve retornar erro', async () => {
+        const res = await request(app).post(`/api/livros/${livroId}/emprestar`);
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toBe("Este livro já está emprestado!");
+    });
+
+    test('22. Devolver um livro emprestado funciona', async () => {
+        const res = await request(app).put(`/api/livros/${livroId}/devolver`);
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.mensagem).toBe("Livro devolvido com sucesso!");
+
+        const resGet = await request(app).get(`/api/livros/${livroId}`);
+        expect(resGet.body.disponivel).toBe(true);
+    });
+
+    test('23. Tentar devolver um livro que já está na biblioteca deve retornar erro', async () => {
+        const res = await request(app).put(`/api/livros/${livroId}/devolver`);
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toBe("Este livro já está na biblioteca (disponível)!");
     });
 });

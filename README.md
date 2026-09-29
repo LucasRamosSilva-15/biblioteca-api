@@ -39,3 +39,5 @@ Esse é um projeto de uma API REST usando o sequelize e sqlite3 que demonstra um
 | **PUT** | `/api/categorias/:id` | Atualizar dados de uma categoria |
 | **DELETE** | `/api/categorias/:id` | Excluir uma categoria |
 | **POST** | `/api/livros/:id/categorias/:categoriaId` | Associar um Livro a uma Categoria (Relacionamento N:N) |
+| **POST** | `/api/livros/:id/emprestar` | Realizar o empréstimo de um livro (Transação) |
+| **PUT** | `/api/livros/:id/devolver` | Devolver um livro emprestado (Transação) |

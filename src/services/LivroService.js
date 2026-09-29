@@ -1,5 +1,6 @@
 const LivroRepository = require('../repositories/LivroRepository');
 const CategoriaRepository = require('../repositories/CategoriaRepository');
+const { sequelize, Emprestimo } = require('../models');
 
 class LivroService {
     async BuscarTodos(filtros) {
@@ -61,6 +62,43 @@ class LivroService {
             }, { transaction: t });
             await t.commit();
             return { mensagem: "Empréstimo realizado com sucesso!" };
+        } catch (error) {
+            await t.rollback();
+            throw error;
+        }
+    }
+
+    async devolver(id) {
+        const t = await sequelize.transaction();
+        try {
+            const livro = await LivroRepository.BuscarPorId(id);
+            if (!livro) {
+                throw new Error("Livro não encontrado!");
+            }
+
+            if (livro.disponivel) {
+                throw new Error("Este livro já está na biblioteca (disponível)!");
+            }
+
+            const emprestimoAberto = await Emprestimo.findOne({
+                where: {
+                    livroId: id,
+                    dataDevolucao: null
+                },
+                transaction: t
+            });
+
+            if (!emprestimoAberto) {
+                throw new Error("Nenhum empréstimo em aberto encontrado para este livro!");
+            }
+
+            await livro.update({ disponivel: true }, { transaction: t });
+
+            await emprestimoAberto.update({ dataDevolucao: new Date() }, { transaction: t });
+
+            await t.commit();
+            return { mensagem: "Livro devolvido com sucesso!" };
+
         } catch (error) {
             await t.rollback();
             throw error;
