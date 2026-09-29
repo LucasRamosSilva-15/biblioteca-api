@@ -52,5 +52,21 @@ class LivroController {
             return res.status(404).json({ error: error.message });
         }
     }
+    async Emprestar(req, res) {
+        try {
+            const resultado = await LivroService.emprestar(req.params.id);
+            return res.status(200).json(resultado);
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+    async devolver(req, res) {
+        try {
+            const resultado = await LivroService.devolver(req.params.id);
+            return res.status(200).json(resultado);
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
 }
 module.exports = new LivroController();

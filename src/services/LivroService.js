@@ -44,5 +44,27 @@ class LivroService {
     async deletar(id) {
         return await LivroRepository.deletar(id);
     }
+    async emprestar(id) {
+        const t = await sequelize.transaction();
+        try {
+            const livro = await LivroRepository.BuscarPorId(id);
+            if (!livro) {
+                throw new Error("Livro não encontrado!");
+            }
+            if (!livro.disponivel) {
+                throw new Error("Este livro já está emprestado!");
+            }
+            await livro.update({ disponivel: false }, { transaction: t });
+            await Emprestimo.create({
+                livroId: id,
+                dataEmprestimo: new Date()
+            }, { transaction: t });
+            await t.commit();
+            return { mensagem: "Empréstimo realizado com sucesso!" };
+        } catch (error) {
+            await t.rollback();
+            throw error;
+        }
+    }
 }
 module.exports = new LivroService();
