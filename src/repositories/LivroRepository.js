@@ -1,12 +1,16 @@
-const { Livro } = require("../models");
+const { Livro, Autor, Categoria } = require("../models");
 
 class LivroRepository {
     async BuscarTodos() {
-        return await Livro.findAll();
+        return await Livro.findAll({
+            include: [Autor, Categoria]
+        });
     }
 
     async BuscarPorId(id) {
-        return await Livro.findByPk(id);
+        return await Livro.findByPk(id, {
+            include: [Autor, Categoria]
+        });
     }
 
     async Criar(livro) {
