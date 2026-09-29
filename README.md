@@ -1,5 +1,4 @@
-Integrante 1: Lucas Ramos Silva
-Integrante 2: Não existente
+Integrante: Lucas Ramos Silva
 
 Esse é um projeto de uma API REST usando o sequelize e sqlite3 que demonstra um sistema de gerenciamento de uma biblioteca com autores, livros e categorias (Demonstrando conceitos de CRUD, relacionamentos e testes unitários)
 
