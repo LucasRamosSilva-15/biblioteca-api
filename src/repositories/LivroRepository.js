@@ -4,19 +4,19 @@ const { Op } = require("sequelize");
 
 class LivroRepository {
     async BuscarTodos(filtros = {}) {
-        const where = {};
+        const condicoesWhere = {};
         if (filtros.titulo) {
-            where.titulo = {
-                [Op.iLike]: `%${filtros.titulo}%`
+            condicoesWhere.titulo = {
+                [Op.like]: `%${filtros.titulo}%`
             };
         }
 
         if (filtros.autorId) {
-            where.autorId = filtros.autorId;
+            condicoesWhere.autorId = filtros.autorId;
         }
 
         if (filtros.disponivel !== undefined) {
-            where.disponivel = filtros.disponivel === 'true';
+            condicoesWhere.disponivel = filtros.disponivel === 'true';
         }
 
         return await Livro.findAll({
