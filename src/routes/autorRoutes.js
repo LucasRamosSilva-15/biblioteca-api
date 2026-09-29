@@ -8,3 +8,5 @@ router.get('/autores', AutorController.BuscarTodos);
 router.get('/autores/:id', AutorController.BuscarPorId);
 router.put('/autores/:id', AutorController.Atualizar);
 router.delete('/autores/:id', AutorController.deletar);
+
+module.exports = router;

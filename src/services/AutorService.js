@@ -1,8 +1,8 @@
 const AutorRepository = require('../repositories/AutorRepository');
 
 class AutorService {
-    async BuscarTodos() {
-        return await AutorRepository.BuscarTodos();
+    async BuscarTodos(filtros) {
+        return await AutorRepository.BuscarTodos(filtros);
     }
 
     async BuscarPorId(id) {

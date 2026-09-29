@@ -11,7 +11,8 @@ class AutorController {
     }
     async BuscarTodos(req, res) {
         try {
-            const autores = await AutorService.BuscarTodos();
+            const filtros = req.query;
+            const autores = await AutorService.BuscarTodos(filtros);
             return res.status(200).json(autores);
         } catch (error) {
             return res.status(500).json({ error: error.message });
