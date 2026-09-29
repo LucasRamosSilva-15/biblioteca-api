@@ -19,10 +19,26 @@ class LivroRepository {
             condicoesWhere.disponivel = filtros.disponivel === 'true';
         }
 
-        return await Livro.findAll({
+        const page = parseInt(filtros.page) || 1;
+        const limit = parseInt(filtros.limit) || 10;
+        const offset = (page - 1) * limit;
+
+        return await Livro.findAndCountAll({
             where: condicoesWhere,
-            include: [Autor, Categoria]
+            include: [Autor, Categoria],
+            limit: limit,
+            offset: offset
         });
+
+        return {
+            data: rows,
+            pagination: {
+                page: page,
+                limit: limit,
+                total: count,
+                totalPages: Math.ceil(count / limit)
+            }
+        };
     }
 
     async BuscarPorId(id) {
