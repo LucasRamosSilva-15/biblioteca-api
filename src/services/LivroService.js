@@ -1,4 +1,5 @@
 const LivroRepository = require('../repositories/LivroRepository');
+const CategoriaRepository = require('../repositories/CategoriaRepository');
 
 class LivroService {
     async BuscarTodos(filtros) {
