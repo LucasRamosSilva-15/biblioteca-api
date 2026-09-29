@@ -8,5 +8,6 @@ router.get('/livros', LivroController.BuscarTodos);
 router.get('/livros/:id', LivroController.BuscarPorId);
 router.put('/livros/:id', LivroController.Atualizar);
 router.delete('/livros/:id', LivroController.deletar);
+router.post('/livros/:id/categorias/:categoriaId', LivroController.AssociarCategoria);
 
 module.exports = router;

@@ -9,6 +9,16 @@ class LivroController {
             return res.status(400).json({ error: error.message });
         }
     }
+    async AssociarCategoria(req, res) {
+        try {
+            const livroId = req.params.id;
+            const categoriaId = req.params.categoriaId;
+            const livro = await LivroService.AssociarCategoria(livroId, categoriaId);
+            return res.status(200).json(livro);
+        } catch (error) {
+            return res.status(404).json({ error: error.message });
+        }
+    }
     async BuscarTodos(req, res) {
         try {
             const livros = await LivroService.BuscarTodos();
